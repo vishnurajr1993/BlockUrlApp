@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_component"
+    app:startDestination="@id/splashScreenFragment">
+
+    <fragment
+        android:id="@+id/splashScreenFragment"
+        android:name="com.imperium.accessabilityapp.presentation.Fragments.SplashScreenFragment"
+        android:label="fragment_splash_sceen"
+        tools:layout="@layout/fragment_splash_sceen" >
+
+        <action
+            android:id="@+id/action_splashScreenFragment_to_addTimingFragment"
+            app:destination="@id/addTimingFragment"
+            app:popUpTo="@+id/splashScreenFragment"
+            app:popUpToInclusive="true"
+            />
+        <action
+            android:id="@+id/action_splashScreenFragment_to_scheduleFragment"
+            app:destination="@id/scheduleFragment"
+            app:popUpTo="@+id/splashScreenFragment"
+            app:popUpToInclusive="true"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/addTimingFragment"
+        android:name="com.imperium.accessabilityapp.presentation.Fragments.AddTimingFragment"
+        android:label="fragment_add_timing"
+        tools:layout="@layout/fragment_add_timing" >
+        <action
+            android:id="@+id/action_addTimingFragment_to_timingFragment"
+            app:destination="@id/timingFragment"
+            app:popUpTo="@+id/addTimingFragment"
+            app:popUpToInclusive="true"
+            >
+            <argument
+                android:name="from"
+                app:argType="string"
+                android:defaultValue="add"/>
+        </action>
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/scheduleFragment"
+        android:name="com.imperium.accessabilityapp.presentation.Fragments.ScheduleFragment"
+        android:label="fragment_scedule"
+        tools:layout="@layout/fragment_scedule" >
+        <action
+            android:id="@+id/action_scheduleFragment_to_timingFragment"
+            app:destination="@id/timingFragment" >
+            <argument
+                android:name="from"
+                app:argType="string"
+                android:defaultValue="edit"/>
+        </action>
+        <action
+            android:id="@+id/action_scheduleFragment_to_addTimingFragment"
+            app:destination="@id/addTimingFragment"
+            app:popUpTo="@id/scheduleFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <dialog
+        android:id="@+id/timingFragment"
+        android:name="com.imperium.accessabilityapp.presentation.Fragments.TimingFragment"
+        android:label="fragment_timing"
+        tools:layout="@layout/fragment_timing" >
+        <action
+            android:id="@+id/action_timingFragment_to_scheduleFragment"
+            app:destination="@id/scheduleFragment" />
+    </dialog>
+</navigation>

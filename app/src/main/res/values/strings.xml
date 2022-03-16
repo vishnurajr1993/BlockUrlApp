@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">BlockSite</string>
+    <string name="accessibility_service_description">For restricting several urls please enable this permission</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="schedule">Schedule</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="save">SAVE</string>
+    <string name="ends">ENDS</string>
+    <string name="starts">STARTS</string>
+    <string name="white_list">In whitelist mode, the <b>websites in the list are allowed </b>but all other websites are blocked.</string>
+    <string name="black_list">In blacklist mode, the <b>websites in the list are blocked </b>but all other websites are allowed. </string>
+    <string name="select_from_date">Select from time</string>
+    <string name="select_to_time">select to time</string>
+    <string name="add_timing">Add Timing</string>
+    <string name="edit_timing">Edit Timing</string>
+    <string name="access_denied">Access Denied</string>
+</resources>
