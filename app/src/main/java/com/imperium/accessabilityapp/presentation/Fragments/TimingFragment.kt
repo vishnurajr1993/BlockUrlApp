@@ -2,7 +2,6 @@ package com.imperium.accessabilityapp.presentation.Fragments
 
 import android.app.TimePickerDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +40,8 @@ class TimingFragment : BottomSheetDialogFragment() {
         setHeader()
         activity?.let { getTime(binding.fromDate, it) }
         activity?.let { getTime(binding.toDate, it) }
+        setStartEndTime()
+
         binding.saveBtn.setOnClickListener {
             vm.setSchedule(
                 startTime = binding.fromDate.text.toString().trim(),
@@ -78,6 +79,44 @@ class TimingFragment : BottomSheetDialogFragment() {
 
     }
 
+    private fun setStartEndTime(){
+
+        lifecycleScope.launchWhenCreated {
+            vm.scheduleTimeState.collectLatest {
+                when(it){
+                    is DataState.Loading->{
+
+                    }
+                    is DataState.Success->{
+                        if(it.data.startTime.isNotEmpty() && it.data.endTime.isNotEmpty()) {
+                            binding.fromDate.setText(it.data.startTime)
+                            binding.fromDate.setTag(it.data.startTime)
+                            binding.toDate.setText(it.data.endTime)
+                            binding.toDate.setTag(it.data.endTime)
+                        }else{
+                            val currentTimeHHMMA =
+                                SimpleDateFormat("K:mm a", Locale.getDefault()).format(Date())
+                            val currentTimeHHMM =
+                                SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+
+                            binding.fromDate.apply {
+                                setText(currentTimeHHMMA)
+                                setTag(currentTimeHHMM)
+                            }
+                            binding.toDate.apply {
+                                setText(currentTimeHHMMA)
+                                setTag(currentTimeHHMM)
+                            }
+                        }
+                    }
+                    is DataState.Error->{
+                        Toast.makeText(activity, it.exception, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+        vm.getScheduledTime()
+    }
 
     private fun setHeader() {
             arguments?.let {

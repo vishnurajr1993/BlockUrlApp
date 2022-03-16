@@ -24,6 +24,7 @@ class MainRepository @Inject constructor(
         sharedPref.setIsScheduled(false)
         sharedPref.setStartTime("","")
         sharedPref.setEndTime("","")
+        sharedPref.setWhiteList(false)
     }
 
     fun setSwitchState(value:Boolean){
@@ -37,10 +38,13 @@ class MainRepository @Inject constructor(
 
     fun getScheduledDates():DataState<TimingModel>{
         val startTime=sharedPref.getStartTime12()
+        val startTime24=sharedPref.getStartTime24()
         val endTime=sharedPref.getEndTime12()
+        val endTime24=sharedPref.getEndTime24()
         DataState.Loading
-        return if (startTime!=null && endTime!=null){
-            DataState.Success(data = TimingModel(startTime = startTime, endTime = endTime))
+        return if (startTime!=null && endTime!=null &&startTime24!=null && endTime24!=null){
+            DataState.Success(data = TimingModel(startTime = startTime, endTime = endTime,
+                startTime24=startTime24,endTime24=endTime24))
         }else{
             DataState.Error(exception = "No dates Found")
         }

@@ -71,4 +71,6 @@ abstract class BaseFragment<VBinding : ViewBinding> : Fragment() {
     }
 
 
+
+
 }

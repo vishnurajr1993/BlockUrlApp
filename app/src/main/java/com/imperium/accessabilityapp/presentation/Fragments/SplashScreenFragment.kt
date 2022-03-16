@@ -23,7 +23,7 @@ class SplashScreenFragment : BaseFragment<FragmentSplashSceenBinding>() {
 
     override fun setUpViews() {
         super.setUpViews()
-        (activity as MainActivity?)!!.supportActionBar!!.hide()
+        //(activity as MainActivity?)!!.supportActionBar!!.hide()
     }
     override fun observeData() {
         super.observeData()

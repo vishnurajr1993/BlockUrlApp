@@ -9,6 +9,8 @@ import com.imperium.accessabilityapp.repository.MainRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainViewModel@ViewModelInject
 constructor(
@@ -52,6 +54,8 @@ constructor(
                 }
                 endTime.isEmpty() -> {
                     _scheduleState.emit(DataState.Error(exception = "Select End Date"))
+                }(startTime24.isAfterCurrentDate(endTime24))->{
+                _scheduleState.emit(DataState.Error(exception = "End date must be after start date"))
                 }
                 else -> {
                     mainRepository.addSchedule(startTime,endTime,startTime24,endTime24)
@@ -62,7 +66,20 @@ constructor(
         }
 
     }
+    fun String.isAfterCurrentDate(targetDate:String):Boolean{
+        val time1: Date = SimpleDateFormat("HH:mm").parse(this)
+        val calendar1: Calendar = Calendar.getInstance()
+        calendar1.setTime(time1)
+        calendar1.add(Calendar.DATE, 1)
 
+        val time2: Date = SimpleDateFormat("HH:mm").parse(targetDate)
+        val calendar2: Calendar = Calendar.getInstance()
+        calendar2.setTime(time2)
+        calendar2.add(Calendar.DATE, 1)
+
+        return calendar1.getTime().after(calendar2.getTime())
+
+    }
     fun getScheduledTime(){
             _scheduleTimeState.value=mainRepository.getScheduledDates()
     }

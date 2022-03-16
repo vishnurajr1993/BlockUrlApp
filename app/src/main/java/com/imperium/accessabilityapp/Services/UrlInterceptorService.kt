@@ -72,19 +72,14 @@ class UrlInterceptorService : AccessibilityService() {
         val lastRecordedTime =
             if (previousUrlDetections.containsKey(detectionId)) previousUrlDetections[detectionId]!! else 0
         //some kind of redirect throttling
-        if (eventTime - lastRecordedTime > 2000) {
+        if (eventTime - lastRecordedTime > 4000) {
             previousUrlDetections[detectionId] = eventTime
             analyzeCapturedUrl(capturedUrl, browserConfig.packageName)
         }
     }
 
     private fun analyzeCapturedUrl(capturedUrl: String, browserPackage: String) {
-        /*val redirectUrl =
-            "https://stackoverflow.com"
-        if (capturedUrl.contains("facebook.com")) {
-            Log.d("TAG>>", "analyzeCapturedUrl: facebook")
-            performRedirect(redirectUrl, browserPackage)
-        }*/
+
         if(repository.isEventCreated()){
             val switchState=repository.getSwitchState()
             val startTime=repository.getStartTime24()
@@ -92,13 +87,23 @@ class UrlInterceptorService : AccessibilityService() {
             if(startTime!=null && endTime!=null) {
                 val isInBlockedState = checkIsTimeBetween(startTime = startTime, endTime = endTime)
                 if (switchState && isInBlockedState) {//blacklist
-                    if(capturedUrl!="Search or type web address" && URL_LIST.contains(capturedUrl)){
+                    if(capturedUrl!="Search or type web address" && URL_LIST.contains(capturedUrl.toLowerCase())){
                         openAccessDenied()
                     }
                 } else if(!switchState && isInBlockedState) {//whitelist
-                    if(capturedUrl!="Search or type web address" && !URL_LIST.contains(capturedUrl)){
+                    var filterdUrl=""
+                    if(capturedUrl.contains("mobile.")){
+                        filterdUrl=capturedUrl.replace("mobile.","")
+                    }else if(capturedUrl.contains("m.")) {
+                        filterdUrl = capturedUrl.replace("m.", "")
+                    }else{
+                        filterdUrl=capturedUrl
+                    }
+                    if(capturedUrl!="Search or type web address" && !URL_LIST.contains(filterdUrl.toLowerCase())){
+                        print("contains")
                         openAccessDenied()
                     }
+
 
 
                 }
@@ -113,21 +118,6 @@ class UrlInterceptorService : AccessibilityService() {
         applicationContext.startActivity(intent)
     }
 
-    /** we just reopen the browser app with our redirect url using service context
-     * We may use more complicated solution with invisible activity to send a simple intent to open the url  */
-    private fun performRedirect(redirectUrl: String, browserPackage: String) {
-        try {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(redirectUrl))
-            intent.setPackage(browserPackage)
-            intent.putExtra(Browser.EXTRA_APPLICATION_ID, browserPackage)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
-            // the expected browser is not installed
-            val i = Intent(Intent.ACTION_VIEW, Uri.parse(redirectUrl))
-            startActivity(i)
-        }
-    }
 
     override fun onInterrupt() {}
     private class SupportedBrowserConfig(var packageName: String, var addressBarId: String)
