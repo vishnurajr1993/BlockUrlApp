@@ -99,10 +99,13 @@ class UrlInterceptorService : AccessibilityService() {
                     }else{
                         filterdUrl=capturedUrl
                     }
-                    if(capturedUrl!="Search or type web address" && !URL_LIST.contains(filterdUrl.toLowerCase())){
-                        print("contains")
+                    if(capturedUrl!="Search or type web address" && capturedUrl !in URL_LIST){
                         openAccessDenied()
                     }
+                    /*if(capturedUrl!="Search or type web address" && !URL_LIST.contains(filterdUrl.toLowerCase())){
+                        print("contains")
+                        openAccessDenied()
+                    }*/
 
 
 
